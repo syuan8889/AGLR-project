@@ -152,22 +152,40 @@
   const variantListEl = document.getElementById("rw-variant-list");
   const descEl = document.getElementById("rw-variant-desc");
   const playToggleBtn = document.getElementById("rw-play-toggle");
+  const playIcon = document.getElementById("rw-icon-play");
+  const pauseIcon = document.getElementById("rw-icon-pause");
+  const playLabel = document.getElementById("rw-play-label");
   const restartBtn = document.getElementById("rw-restart");
-  const speedBtn = document.getElementById("rw-speed");
+
+  function setPlayUI(isPlaying) {
+    if (playIcon) playIcon.style.display = isPlaying ? "none" : "block";
+    if (pauseIcon) pauseIcon.style.display = isPlaying ? "block" : "none";
+    if (playLabel) playLabel.textContent = isPlaying ? "Pause" : "Play";
+  }
 
   function syncPlayBoth() {
     if (!baseVideo || !editVideo) return;
     baseVideo.playbackRate = playbackRate;
     editVideo.playbackRate = playbackRate;
-    Promise.all([baseVideo.play(), editVideo.play()]).catch(() => {});
-    if (playToggleBtn) playToggleBtn.textContent = "Pause Both";
+    Promise.all([baseVideo.play(), editVideo.play()])
+      .then(() => setPlayUI(true))
+      .catch(() => setPlayUI(false));
   }
 
   function syncPauseBoth() {
     if (!baseVideo || !editVideo) return;
     baseVideo.pause();
     editVideo.pause();
-    if (playToggleBtn) playToggleBtn.textContent = "Play Both";
+    setPlayUI(false);
+  }
+
+  function togglePlayBoth() {
+    if (!baseVideo || !editVideo) return;
+    if (baseVideo.paused || editVideo.paused) {
+      syncPlayBoth();
+    } else {
+      syncPauseBoth();
+    }
   }
 
   function renderVariants() {
@@ -235,14 +253,13 @@
   });
 
   if (playToggleBtn) {
-    playToggleBtn.addEventListener("click", () => {
-      if (baseVideo.paused || editVideo.paused) {
-        syncPlayBoth();
-      } else {
-        syncPauseBoth();
-      }
-    });
+    playToggleBtn.addEventListener("click", togglePlayBoth);
   }
+
+  // Click directly on either real-world video pane to toggle synchronized play/pause
+  document.querySelectorAll(".rw-clickable").forEach((pane) => {
+    pane.addEventListener("click", togglePlayBoth);
+  });
 
   if (restartBtn) {
     restartBtn.addEventListener("click", () => {
@@ -252,17 +269,18 @@
     });
   }
 
-  if (speedBtn) {
-    speedBtn.addEventListener("click", () => {
-      playbackRate = playbackRate === 1.0 ? 0.5 : 1.0;
-      baseVideo.playbackRate = playbackRate;
-      editVideo.playbackRate = playbackRate;
-      speedBtn.textContent = `Speed: ${playbackRate.toFixed(1)}×`;
+  document.querySelectorAll(".speed-opt").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      playbackRate = parseFloat(btn.getAttribute("data-speed")) || 1.0;
+      document.querySelectorAll(".speed-opt").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      if (baseVideo) baseVideo.playbackRate = playbackRate;
+      if (editVideo) editVideo.playbackRate = playbackRate;
     });
-  }
+  });
 
   renderVariants();
-  loadCurrentPair(false);
+  loadCurrentPair(true);
 
   // Results tabs
   document.querySelectorAll("[data-result-tab]").forEach((btn) => {

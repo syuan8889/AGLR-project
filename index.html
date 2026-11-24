@@ -20,9 +20,10 @@
       </a>
       <div class="nav-right">
         <nav class="nav-links">
-          <a href="#demo">Demo</a>
+          <a href="#overview">Overview</a>
           <a href="#abstract">Abstract</a>
           <a href="#method">Method</a>
+          <a href="#interactive-demo">Studio Demo</a>
           <a href="#real-world">Real-World G1</a>
           <a href="#results">Experiments</a>
           <a href="#bibtex">BibTeX</a>
@@ -81,29 +82,28 @@
       </div>
 
       <div class="hero-highlight">
+        <span class="pulse-dot" aria-hidden="true"></span>
         <span class="hero-highlight-value">9.1 ms</span>
         <span class="hero-highlight-text">Single-pass editing for a cached <span class="hero-highlight-value">500-frame</span> motion on RTX 4090D</span>
       </div>
     </div>
   </section>
 
-  <!-- Interactive Demo + Teaser -->
-  <section id="demo" class="section" style="padding-top: 12px;">
+  <!-- Primary Video: Paper Overview + Teaser -->
+  <section id="overview" class="section" style="padding-top: 8px;">
     <div class="container">
-      <div class="media-card" style="margin-bottom: 24px;">
-        <video controls playsinline preload="metadata" poster="assets/images/teaser.png">
-          <source src="assets/videos/user_demo.mp4" type="video/mp4" />
+      <div class="media-card featured-video-card" style="margin-bottom: 28px;">
+        <div class="media-card-topbar">
+          <div class="topbar-left">
+            <span class="topbar-dot"></span>
+            <span>Paper Overview Video</span>
+          </div>
+          <span class="topbar-meta">1080p &middot; 3:02</span>
+        </div>
+        <video id="overview-video" controls playsinline preload="metadata" poster="assets/images/teaser.png">
+          <source src="assets/videos/overview.mp4" type="video/mp4" />
           Your browser does not support HTML5 video.
         </video>
-        <div class="media-caption">
-          <strong>Interactive Generation &amp; Geometric Editing Demo.</strong>
-          Text-conditioned motion generation followed by real-time WGAR attribute editing without repeating flow sampling.
-          <div class="mode-pills">
-            <span class="mode-pill">Offset: add delta to base trajectory</span>
-            <span class="mode-pill">Keyframe: set values at selected keyframes</span>
-            <span class="mode-pill">Constant: fix target over time interval</span>
-          </div>
-        </div>
       </div>
 
       <div class="figure-card">
@@ -175,14 +175,50 @@
     </div>
   </section>
 
+  <!-- Interactive Editing Studio Demo (placed right above Real-World) -->
+  <section id="interactive-demo" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Interactive Interface</span>
+        <h2 class="section-title">AGLR Motion Studio Demo</h2>
+        <p class="section-subtitle">
+          Text-conditioned base motion generation followed by real-time WGAR attribute editing—without repeating flow sampling.
+        </p>
+      </div>
+
+      <div class="media-card">
+        <div class="media-card-topbar">
+          <div class="topbar-left">
+            <span class="topbar-dot topbar-dot-teal"></span>
+            <span>Interactive Generation &amp; Geometric Editing</span>
+          </div>
+          <span class="topbar-meta">Offset &middot; Keyframe &middot; Constant</span>
+        </div>
+        <video controls playsinline preload="metadata">
+          <source src="assets/videos/user_demo.mp4" type="video/mp4" />
+          Your browser does not support HTML5 video.
+        </video>
+        <div class="media-caption">
+          <strong>Real-Time Latent Refinement Workflow.</strong>
+          Edit individual or composed attributes directly on the cached motion latent with three intuitive control modes:
+          <div class="mode-pills">
+            <span class="mode-pill">Offset: add delta to base trajectory</span>
+            <span class="mode-pill">Keyframe: specify targets at selected keyframes</span>
+            <span class="mode-pill">Constant: fix target value over a time interval</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Real-World Unitree G1 Showcase -->
-  <section id="real-world" class="section section-alt">
+  <section id="real-world" class="section">
     <div class="container">
       <div class="section-header">
         <span class="section-eyebrow">Hardware Deployment</span>
         <h2 class="section-title">Real-World Motion Editing on Unitree G1</h2>
         <p class="section-subtitle">
-          Compare base executions (left) side-by-side with edited variants (right), tracked on a physical Unitree G1 humanoid robot. Select a base motion and click any edit below.
+          Compare base executions (left) side-by-side with edited variants (right), tracked on a physical Unitree G1 humanoid robot. Click any edit or tap the video to toggle playback.
         </p>
       </div>
 
@@ -196,27 +232,37 @@
         <div id="rw-variant-list" class="variant-selector"></div>
 
         <div class="video-compare-grid">
-          <div class="video-pane">
+          <div class="video-pane rw-clickable" title="Click to play / pause both videos">
             <div class="video-pane-header">
               <span id="rw-base-title">Base 0 (Reference Execution)</span>
               <span class="pane-tag pane-tag-base">Base</span>
             </div>
-            <video id="rw-base-video" muted loop playsinline controls preload="metadata"></video>
+            <video id="rw-base-video" muted loop playsinline autoplay preload="auto"></video>
           </div>
-          <div class="video-pane">
+          <div class="video-pane rw-clickable" title="Click to play / pause both videos">
             <div class="video-pane-header">
               <span id="rw-edit-title">Right Arm Up +0.3</span>
               <span class="pane-tag pane-tag-edit">Edited</span>
             </div>
-            <video id="rw-edit-video" muted loop playsinline controls preload="metadata"></video>
+            <video id="rw-edit-video" muted loop playsinline autoplay preload="auto"></video>
           </div>
         </div>
 
         <div class="transport-bar">
           <div class="transport-controls">
-            <button type="button" id="rw-play-toggle" class="ctrl-btn primary">Play Both</button>
-            <button type="button" id="rw-restart" class="ctrl-btn">Restart Sync</button>
-            <button type="button" id="rw-speed" class="ctrl-btn">Speed: 1.0×</button>
+            <button type="button" id="rw-play-toggle" class="ctrl-btn primary">
+              <svg id="rw-icon-play" style="display:none" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+              <svg id="rw-icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+              <span id="rw-play-label">Pause</span>
+            </button>
+            <button type="button" id="rw-restart" class="ctrl-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><polyline points="3 3 3 8 8 8"/></svg>
+              <span>Restart Sync</span>
+            </button>
+            <div class="speed-segment" role="group" aria-label="Playback speed">
+              <button type="button" class="speed-opt" data-speed="0.5">0.5×</button>
+              <button type="button" class="speed-opt active" data-speed="1.0">1.0×</button>
+            </div>
           </div>
           <div id="rw-variant-desc" class="variant-desc"></div>
         </div>
@@ -232,7 +278,7 @@
   </section>
 
   <!-- Experimental Results -->
-  <section id="results" class="section">
+  <section id="results" class="section section-alt">
     <div class="container">
       <div class="section-header">
         <span class="section-eyebrow">Benchmarks</span>
@@ -453,7 +499,7 @@
   </section>
 
   <!-- BibTeX -->
-  <section id="bibtex" class="section section-alt">
+  <section id="bibtex" class="section">
     <div class="container" style="max-width: 860px;">
       <div class="section-header">
         <span class="section-eyebrow">Citation</span>
