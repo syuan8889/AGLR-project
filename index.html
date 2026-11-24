@@ -190,21 +190,24 @@
         <div class="media-card-topbar">
           <div class="topbar-left">
             <span class="topbar-dot topbar-dot-teal"></span>
-            <span>Interactive Generation &amp; Geometric Editing</span>
+            <span>AGLR Motion Studio Walkthrough</span>
           </div>
-          <span class="topbar-meta">Offset &middot; Keyframe &middot; Constant</span>
+          <span class="topbar-meta">Viser 3D &middot; MuJoCo FK &middot; 1080p</span>
         </div>
         <video controls playsinline preload="metadata">
-          <source src="assets/videos/user_demo.mp4" type="video/mp4" />
+          <source src="assets/videos/studio_demo.mp4" type="video/mp4" />
           Your browser does not support HTML5 video.
         </video>
         <div class="media-caption">
-          <strong>Real-Time Latent Refinement Workflow.</strong>
-          Edit individual or composed attributes directly on the cached motion latent with three intuitive control modes:
+          <strong>Interactive Web Service for Humanoid Motion Generation &amp; Editing.</strong>
+          Built on Viser and MuJoCo FK with cached immutable base latents, live Plotly attribute curves, up to 8 concurrent sessions, and one-click NPZ export:
           <div class="mode-pills">
-            <span class="mode-pill">Offset: add delta to base trajectory</span>
-            <span class="mode-pill">Keyframe: specify targets at selected keyframes</span>
-            <span class="mode-pill">Constant: fix target value over a time interval</span>
+            <span class="mode-pill">Offset</span>
+            <span class="mode-pill">Amplitude Scale</span>
+            <span class="mode-pill">Keyframe Offsets</span>
+            <span class="mode-pill">Constant Target</span>
+            <span class="mode-pill">Boundary Fade</span>
+            <span class="mode-pill">NPZ Export (RPR39 + qpos)</span>
           </div>
         </div>
       </div>
