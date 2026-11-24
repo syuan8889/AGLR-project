@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGLR: Attribute-Guided Latent Refinement for Fine-Grained Humanoid Motion Generation and Editing</title>
+  <meta name="description" content="AGLR unifies fine-grained humanoid motion generation and selective editing via a 21-channel geometric attribute interface and single-pass latent refinement in 9.1 ms." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- Sticky Navigation -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="#">
+        AGLR
+        <span class="brand-badge">Humanoid Motion</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links">
+          <a href="#demo">Demo</a>
+          <a href="#abstract">Abstract</a>
+          <a href="#method">Method</a>
+          <a href="#real-world">Real-World G1</a>
+          <a href="#results">Experiments</a>
+          <a href="#bibtex">BibTeX</a>
+        </nav>
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+          <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg id="theme-icon-sun" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <span id="theme-label">Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <h1 class="hero-title">
+        <span class="accent">AGLR</span>: Attribute-Guided Latent Refinement for Fine-Grained Humanoid Motion Generation and Editing
+      </h1>
+
+      <div class="authors">
+        <span class="author-item"><a href="https://openreview.net/profile?id=~Shuai_Yuan13" target="_blank" rel="noopener">Shuai Yuan</a><sup>1</sup></span>
+        <span class="author-item"><a href="https://openreview.net/profile?id=~Gui_Yuwei1" target="_blank" rel="noopener">Yuwei Gui</a><sup>1</sup></span>
+        <span class="author-item"><a href="https://openreview.net/profile?id=~Mingshuang_Luo1" target="_blank" rel="noopener">Mingshuang Luo</a><sup>2</sup></span>
+        <span class="author-item"><a href="https://openreview.net/profile?id=~Zhuo_Li3" target="_blank" rel="noopener">Zhuo Li</a><sup>2</sup></span>
+        <span class="author-item"><a href="https://openreview.net/profile?id=~Siyuan_Meng2" target="_blank" rel="noopener">Siyuan Meng</a><sup>3</sup></span>
+        <span class="author-item"><a href="https://openreview.net/profile?id=~Wenhao_Cui2" target="_blank" rel="noopener">Wenhao Cui</a><sup>3</sup></span>
+        <span class="author-item"><a href="https://openreview.net/profile?id=~RuiBing_Hou1" target="_blank" rel="noopener">RuiBing Hou</a><sup>2</sup></span>
+        <span class="author-item"><a href="https://openreview.net/profile?id=~Bingpeng_Ma1" target="_blank" rel="noopener">Bingpeng Ma</a><sup>1,†</sup></span>
+      </div>
+
+      <div class="affiliations">
+        <span><sup>1</sup>University of the Chinese Academy of Sciences</span>
+        <span><sup>2</sup>Institute of Computing Technology, Chinese Academy of Sciences</span>
+        <span><sup>3</sup>Noetix Robotics</span>
+      </div>
+      <div class="corresponding-note"><sup>†</sup>Corresponding author</div>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#bibtex" title="Replace with arXiv URL once posted">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Paper (arXiv)
+        </a>
+        <a class="btn" href="#" title="Replace with GitHub repository URL">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.69-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+          Code (Coming Soon)
+        </a>
+        <a class="btn" href="#real-world">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Unitree G1 Videos
+        </a>
+        <a class="btn" href="#bibtex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          BibTeX
+        </a>
+      </div>
+
+      <div class="hero-highlight">
+        <span class="hero-highlight-value">9.1 ms</span>
+        <span class="hero-highlight-text">Single-pass editing for a cached <span class="hero-highlight-value">500-frame</span> motion on RTX 4090D</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Demo + Teaser -->
+  <section id="demo" class="section" style="padding-top: 12px;">
+    <div class="container">
+      <div class="media-card" style="margin-bottom: 24px;">
+        <video controls playsinline preload="metadata" poster="assets/images/teaser.png">
+          <source src="assets/videos/user_demo.mp4" type="video/mp4" />
+          Your browser does not support HTML5 video.
+        </video>
+        <div class="media-caption">
+          <strong>Interactive Generation &amp; Geometric Editing Demo.</strong>
+          Text-conditioned motion generation followed by real-time WGAR attribute editing without repeating flow sampling.
+          <div class="mode-pills">
+            <span class="mode-pill">Offset: add delta to base trajectory</span>
+            <span class="mode-pill">Keyframe: set values at selected keyframes</span>
+            <span class="mode-pill">Constant: fix target over time interval</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="figure-card">
+        <img class="zoomable" src="assets/images/teaser.png" alt="AGLR Teaser Figure" />
+        <div class="figure-caption">
+          <strong>Fine-grained, fast, composable, and temporally adaptive humanoid motion generation.</strong>
+          AGLR enables intuitive control over individual limbs along three spatial axes (Front, Out, Up), torso orientation, and root trajectories—freely composed and varied over time within a single motion instance.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Abstract -->
+  <section id="abstract" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Overview</span>
+        <h2 class="section-title">Abstract</h2>
+      </div>
+      <div class="abstract-box">
+        <p>
+          Humanoid motion generation must accommodate evolving task requirements, where localized adjustments should satisfy new geometric constraints without disrupting desired motion details. However, language-based control lacks geometric precision, while joint-level constraints require explicit spatial targets. Local geometric constraints are also underdetermined, complicating target satisfaction and source preservation. We present <strong>AGLR (Attribute-Guided Latent Refinement)</strong>, a unified framework for fine-grained humanoid motion generation and editing through source-anchored refinement. A compact geometric interface supports composable, time-varying control of limb extents, torso orientation, and root trajectories. Given a generated or encoded base latent, an Attribute Residual Adapter predicts a single-pass correction, with dual-level supervision enforcing target matching and selective preservation across attributes and motion coordinates. On HumanML3D-G1, AGLR achieves the highest controllable-generation and preservation-constrained editing success rates among evaluated methods. Editing takes only <strong>9.1 ms</strong> for a cached 500-frame motion, without additional sampling or test-time optimization. Zero-shot evaluation on BONES-SEED-G1 further demonstrates transfer without fine-tuning.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Method -->
+  <section id="method" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Methodology</span>
+        <h2 class="section-title">Source-Anchored Latent Refinement</h2>
+        <p class="section-subtitle">
+          Unifying controllable motion generation and selective editing into a single forward pass over a shared motion latent space.
+        </p>
+      </div>
+
+      <div class="figure-card">
+        <img class="zoomable" src="assets/images/framework.png" alt="AGLR Framework Architecture" />
+        <div class="figure-caption">
+          <strong>AGLR Framework.</strong> A base latent is obtained either from text-conditioned latent flow generation or by encoding an existing source motion. Conditioned on masked WGAR attribute targets, the Attribute Residual Adapter (ARA) predicts an additive latent refinement in one forward pass, decoded directly into Unitree G1 motion (RPR39).
+        </div>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-num">1</div>
+          <h3>21-Channel WGAR Interface</h3>
+          <p>
+            Whole-body Geometric Attributes Representation encodes directional limb extents (left/right arm &amp; leg: Front, Out, Up), torso tilt/heading, root horizontal path, height, and root orientation—supporting composable, time-varying requests.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-num">2</div>
+          <h3>Single-Pass Residual Adapter</h3>
+          <p>
+            Given a cached base latent, ARA predicts an additive latent correction without repeating diffusion/flow sampling or test-time optimization—refining and decoding 500 frames (10 s at 50 Hz) in <strong>9.1 ms</strong> on an RTX 4090D.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-num">3</div>
+          <h3>Dual-Level Preservation Supervision</h3>
+          <p>
+            Combines paired-target, identity, and selective-editing objectives across both unselected WGAR attributes and unedited motion coordinates—achieving low drift without requiring paired edited motion datasets.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Real-World Unitree G1 Showcase -->
+  <section id="real-world" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Hardware Deployment</span>
+        <h2 class="section-title">Real-World Motion Editing on Unitree G1</h2>
+        <p class="section-subtitle">
+          Compare base executions (left) side-by-side with edited variants (right), tracked on a physical Unitree G1 humanoid robot. Select a base motion and click any edit below.
+        </p>
+      </div>
+
+      <div class="tab-bar">
+        <button type="button" class="tab-btn active" data-rw-group="base0">Base 0: Limb, Torso &amp; Time-Varying (11)</button>
+        <button type="button" class="tab-btn" data-rw-group="base1">Base 1: Root Trajectory &amp; Composition (2)</button>
+        <button type="button" class="tab-btn" data-rw-group="base2">Base 2: Marching Heading Turns (2)</button>
+      </div>
+
+      <div class="comparator-shell">
+        <div id="rw-variant-list" class="variant-selector"></div>
+
+        <div class="video-compare-grid">
+          <div class="video-pane">
+            <div class="video-pane-header">
+              <span id="rw-base-title">Base 0 (Reference Execution)</span>
+              <span class="pane-tag pane-tag-base">Base</span>
+            </div>
+            <video id="rw-base-video" muted loop playsinline controls preload="metadata"></video>
+          </div>
+          <div class="video-pane">
+            <div class="video-pane-header">
+              <span id="rw-edit-title">Right Arm Up +0.3</span>
+              <span class="pane-tag pane-tag-edit">Edited</span>
+            </div>
+            <video id="rw-edit-video" muted loop playsinline controls preload="metadata"></video>
+          </div>
+        </div>
+
+        <div class="transport-bar">
+          <div class="transport-controls">
+            <button type="button" id="rw-play-toggle" class="ctrl-btn primary">Play Both</button>
+            <button type="button" id="rw-restart" class="ctrl-btn">Restart Sync</button>
+            <button type="button" id="rw-speed" class="ctrl-btn">Speed: 1.0×</button>
+          </div>
+          <div id="rw-variant-desc" class="variant-desc"></div>
+        </div>
+      </div>
+
+      <div class="figure-card" style="margin-top: 24px;">
+        <img class="zoomable" src="assets/images/tracking.png" alt="Real-world Unitree G1 tracking snapshots" />
+        <div class="figure-caption">
+          <strong>Physical Robot Tracking Snapshots.</strong> Comparing the original execution with single-arm, multi-axis arm, and combined arm + torso lean edits at aligned timestamps on Unitree G1.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experimental Results -->
+  <section id="results" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Benchmarks</span>
+        <h2 class="section-title">Quantitative &amp; Qualitative Results</h2>
+        <p class="section-subtitle">
+          Evaluated on HumanML3D-G1 and zero-shot transferred to BONES-SEED-G1 without fine-tuning.
+        </p>
+      </div>
+
+      <div class="tab-bar">
+        <button type="button" class="tab-btn active" data-result-tab="res-editing">Selective Editing</button>
+        <button type="button" class="tab-btn" data-result-tab="res-generation">Controllable Generation</button>
+        <button type="button" class="tab-btn" data-result-tab="res-zeroshot">Zero-Shot (BONES-SEED-G1)</button>
+        <button type="button" class="tab-btn" data-result-tab="res-sensitivity">Threshold Sweeps &amp; Ablations</button>
+      </div>
+
+      <!-- Panel 1: Selective Editing -->
+      <div id="res-editing" class="result-panel active">
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Ref.</th>
+                <th>TAE ↓</th>
+                <th>NAD ↓</th>
+                <th>NJD (°) ↓</th>
+                <th>ASR<sub>c</sub><sup>a</sup> (%) ↑</th>
+                <th>ASR<sub>c</sub><sup>j</sup> (%) ↑</th>
+                <th>Latency (ms) ↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TRACE</td><td>arXiv'26</td>
+                <td>0.2220</td><td class="best">0.0557</td><td class="best">0.000</td>
+                <td class="second">63.80</td><td class="second">65.64</td><td>1,009.22</td>
+              </tr>
+              <tr>
+                <td>OmniME</td><td>CVPR'26</td>
+                <td>0.2412</td><td>0.1226</td><td>1.383</td>
+                <td>61.51</td><td>64.32</td><td>969.72</td>
+              </tr>
+              <tr>
+                <td>ScaleMoGen</td><td>ECCV'26</td>
+                <td>0.8137</td><td>0.3867</td><td>7.989</td>
+                <td>10.05</td><td>6.58</td><td class="second">275.41</td>
+              </tr>
+              <tr>
+                <td>DNO</td><td>CVPR'24</td>
+                <td>0.1514</td><td>0.5958</td><td>12.172</td>
+                <td>10.89</td><td>1.92</td><td>69,721.37</td>
+              </tr>
+              <tr>
+                <td>RG-DNO</td><td>CVPR'26</td>
+                <td class="best">0.1008</td><td>1.2234</td><td>29.847</td>
+                <td>0.78</td><td>0.00</td><td>531,482.50</td>
+              </tr>
+              <tr class="ours-row">
+                <td>AGLR (Ours)</td><td>—</td>
+                <td class="second">0.1431</td><td class="second">0.0584</td><td class="second">0.681</td>
+                <td class="best">76.81</td><td class="best">77.28</td><td class="best">13.15*</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.84rem; color: var(--text-muted); margin: -10px 0 20px;">
+          * End-to-end latency including source processing and output conversion is 13.15 ms; with a cached source latent, ARA refinement + decoding takes <strong>9.1 ms</strong> for 500 frames.
+        </p>
+        <div class="figure-card">
+          <img class="zoomable" src="assets/images/compare_edit.png" alt="Selective Editing Qualitative Comparison" />
+          <div class="figure-caption">
+            <strong>Selective Motion Editing Comparison.</strong> AGLR satisfies single-part, compositional, and time-varying attribute targets while preserving unedited body parts, whereas OmniME and RG-DNO exhibit noticeable non-target drift.
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 2: Controllable Generation -->
+      <div id="res-generation" class="result-panel">
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Ref.</th>
+                <th>TAE ↓</th>
+                <th>ASR (%) ↑</th>
+                <th>FID ↓</th>
+                <th>R@1 ↑</th>
+                <th>R@2 ↑</th>
+                <th>R@3 ↑</th>
+                <th>MD ↓</th>
+                <th>Latency (ms) ↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>OmniControl</td><td>ICLR'24</td>
+                <td>0.8695</td><td>17.20</td><td>0.1258</td>
+                <td>42.74</td><td>58.92</td><td>67.95</td><td>1.1600</td><td>3,132.79</td>
+              </tr>
+              <tr>
+                <td>TLControl</td><td>ECCV'24</td>
+                <td>0.5871</td><td>29.79</td><td>0.1431</td>
+                <td>25.11</td><td>34.13</td><td>39.69</td><td>1.2552</td><td>723.87</td>
+              </tr>
+              <tr>
+                <td>MotionLCM</td><td>ECCV'24</td>
+                <td>0.3629</td><td>40.17</td><td>0.0773</td>
+                <td>44.15</td><td>60.18</td><td>68.72</td><td>1.1253</td><td class="best">85.95</td>
+              </tr>
+              <tr>
+                <td>MaskControl</td><td>ICCV'25</td>
+                <td>0.6374</td><td>25.66</td><td class="second">0.0303</td>
+                <td class="second">49.95</td><td class="second">66.05</td><td class="second">74.52</td><td class="second">1.1237</td><td>4,558.55</td>
+              </tr>
+              <tr>
+                <td>SFControl</td><td>ICCV'25</td>
+                <td>0.3100</td><td>41.34</td><td>0.4884</td>
+                <td>21.79</td><td>31.14</td><td>37.53</td><td>1.2733</td><td>1,859.52</td>
+              </tr>
+              <tr>
+                <td>ProjFlow</td><td>CVPR'26</td>
+                <td class="second">0.1192</td><td class="second">73.66</td><td>0.0776</td>
+                <td>45.94</td><td>61.81</td><td>69.87</td><td>1.1550</td><td>13,638.80</td>
+              </tr>
+              <tr class="ours-row">
+                <td>AGLR (Ours)</td><td>—</td>
+                <td class="best">0.0740</td><td class="best">80.34</td><td class="best">0.0225</td>
+                <td class="best">56.04</td><td class="best">71.07</td><td class="best">78.21</td><td class="best">1.1101</td><td class="second">90.09</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="figure-card">
+          <img class="zoomable" src="assets/images/compare_generation.png" alt="Controllable Generation Qualitative Comparison" />
+          <div class="figure-caption">
+            <strong>Fine-Grained Controllable Generation Comparison.</strong> Examples spanning individual limb control, cross-part composition, root trajectory control, and all-attribute conditioning on HumanML3D-G1.
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3: Zero-Shot -->
+      <div id="res-zeroshot" class="result-panel">
+        <div class="two-col-grid">
+          <div>
+            <h3 style="margin: 0 0 10px; font-size: 1rem;">Zero-Shot Controllable Generation</h3>
+            <div class="table-wrap">
+              <table class="results-table">
+                <thead>
+                  <tr>
+                    <th>Method</th>
+                    <th>TAE ↓</th>
+                    <th>ASR ↑</th>
+                    <th>FID ↓</th>
+                    <th>R@1 ↑</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>OmniControl</td><td>0.8052</td><td>15.97</td><td>0.3168</td><td>30.24</td></tr>
+                  <tr><td>TLControl</td><td>0.8648</td><td>16.08</td><td>0.6316</td><td>11.34</td></tr>
+                  <tr><td>MotionLCM</td><td>0.4551</td><td>31.18</td><td>0.3604</td><td class="second">42.59</td></tr>
+                  <tr><td>MaskControl</td><td>0.7688</td><td>17.50</td><td class="second">0.2669</td><td>39.72</td></tr>
+                  <tr><td>SFControl</td><td>0.2933</td><td>44.47</td><td>0.6186</td><td>24.14</td></tr>
+                  <tr><td>ProjFlow</td><td class="second">0.1003</td><td class="second">74.50</td><td>0.2708</td><td>41.03</td></tr>
+                  <tr class="ours-row"><td>AGLR (Ours)</td><td class="best">0.0947</td><td class="best">75.61</td><td class="best">0.2312</td><td class="best">47.98</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="margin: 0 0 10px; font-size: 1rem;">Zero-Shot Selective Editing</h3>
+            <div class="table-wrap">
+              <table class="results-table">
+                <thead>
+                  <tr>
+                    <th>Method</th>
+                    <th>TAE ↓</th>
+                    <th>NAD ↓</th>
+                    <th>NJD ↓</th>
+                    <th>ASR<sub>c</sub><sup>a</sup> ↑</th>
+                    <th>ASR<sub>c</sub><sup>j</sup> ↑</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>TRACE</td><td>0.2370</td><td class="best">0.0560</td><td class="best">0.000</td><td>61.75</td><td>62.32</td></tr>
+                  <tr><td>OmniME</td><td>0.2430</td><td>0.1255</td><td>1.664</td><td class="second">61.85</td><td class="second">62.65</td></tr>
+                  <tr><td>ScaleMoGen</td><td>0.9673</td><td>0.4686</td><td>10.007</td><td>7.72</td><td>2.59</td></tr>
+                  <tr><td>DNO</td><td>0.1742</td><td>0.6588</td><td>14.205</td><td>6.78</td><td>0.00</td></tr>
+                  <tr><td>RG-DNO</td><td class="best">0.1144</td><td>1.2847</td><td>30.362</td><td>0.00</td><td>0.00</td></tr>
+                  <tr class="ours-row"><td>AGLR (Ours)</td><td class="second">0.1663</td><td class="second">0.0726</td><td class="second">1.106</td><td class="best">74.28</td><td class="best">74.35</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4: Threshold Sweeps & Ablations -->
+      <div id="res-sensitivity" class="result-panel">
+        <div class="two-col-grid">
+          <div class="figure-card">
+            <img class="zoomable" src="assets/images/asr_methods_comparison.png" alt="Preservation Threshold Sweep Across Methods" />
+            <div class="figure-caption">
+              <strong>Method Comparison Across Preservation Thresholds.</strong> AGLR maintains the highest ASR across NAD (0.10–0.50) and NJD (1°–5°) threshold sweeps.
+            </div>
+          </div>
+          <div class="figure-card">
+            <img class="zoomable" src="assets/images/asr_ablations.png" alt="Ablation Study Across Preservation Thresholds" />
+            <div class="figure-caption">
+              <strong>Ablation Analysis.</strong> Base-latent conditioning, residual prediction, and dual-level preservation objectives provide complementary gains across thresholds.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BibTeX -->
+  <section id="bibtex" class="section section-alt">
+    <div class="container" style="max-width: 860px;">
+      <div class="section-header">
+        <span class="section-eyebrow">Citation</span>
+        <h2 class="section-title">BibTeX</h2>
+      </div>
+      <div class="bibtex-card">
+        <button type="button" id="copy-bibtex" class="copy-btn">Copy BibTeX</button>
+        <pre id="bibtex-code">@article{yuan2026aglr,
+  title   = {AGLR: Attribute-Guided Latent Refinement for Fine-Grained Humanoid Motion Generation and Editing},
+  author  = {Yuan, Shuai and Gui, Yuwei and Luo, Mingshuang and Li, Zhuo and Meng, Siyuan and Cui, Wenhao and Hou, RuiBing and Ma, Bingpeng},
+  journal = {arXiv preprint arXiv:26xx.xxxxx},
+  year    = {2026}
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      AGLR Project Page &middot; Built for GitHub Pages. Click any figure to zoom.
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Zoomed figure">
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
