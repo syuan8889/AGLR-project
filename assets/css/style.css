@@ -907,6 +907,11 @@ table.results-table tbody tr.ours-row td:first-child {
   color: var(--text-muted);
 }
 
+.page-views {
+  margin-top: 8px;
+  font-size: 0.75rem;
+}
+
 /* Lightbox */
 .lightbox {
   position: fixed;
